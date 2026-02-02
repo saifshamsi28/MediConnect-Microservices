@@ -1,0 +1,9 @@
+spring:
+  application:
+    name: pharmacy-service
+
+  cloud:
+    config:
+      uri: http://localhost:8888
+  config:
+    import: "configserver:"
