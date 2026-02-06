@@ -2,6 +2,7 @@ package com.mediconnect.doctorservice.service;
 
 import com.mediconnect.doctorservice.dto.DoctorRequest;
 import com.mediconnect.doctorservice.entity.Doctor;
+import com.mediconnect.doctorservice.exception.DoctorAlreadyExistsException;
 import com.mediconnect.doctorservice.repository.DoctorRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -18,10 +19,13 @@ public class DoctorService {
     public Doctor createDoctor(DoctorRequest request) {
 
         if (doctorRepository.existsByEmail(request.getEmail())) {
-            throw new RuntimeException("Doctor with this email already exists!");
+            throw new DoctorAlreadyExistsException(
+                    "Doctor with email '" + request.getEmail() + "' already exists!"
+            );
         }
 
         Doctor doctor = Doctor.builder()
+                .userId(request.getUserId())
                 .name(request.getName())
                 .email(request.getEmail())
                 .specialization(request.getSpecialization())
@@ -38,10 +42,13 @@ public class DoctorService {
         List<Doctor> doctors = requests.stream().map(req -> {
 
             if (doctorRepository.existsByEmail(req.getEmail())) {
-                throw new RuntimeException("Duplicate email: " + req.getEmail());
+                throw new DoctorAlreadyExistsException(
+                        "Duplicate email found: " + req.getEmail()
+                );
             }
 
             return Doctor.builder()
+                    .userId(req.getUserId())
                     .name(req.getName())
                     .email(req.getEmail())
                     .specialization(req.getSpecialization())
