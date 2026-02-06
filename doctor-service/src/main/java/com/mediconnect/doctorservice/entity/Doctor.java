@@ -1,13 +1,20 @@
 package com.mediconnect.doctorservice.entity;
 
 import jakarta.persistence.*;
+import lombok.*;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "doctors")
+@Builder
 public class Doctor {
 
     @Id
@@ -45,15 +52,16 @@ public class Doctor {
     @OneToMany(mappedBy = "doctor", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ConsultationSlot> consultationSlots;
 
+    // runs only first time before saving entity and save the creation timestamp
     @PrePersist
     public void prePersist() {
         this.createdAt = LocalDateTime.now();
     }
 
+    // run automatically everytime doctor entity will be updated
+    // before updating entity hibernate will call this method and update the timestamp
     @PreUpdate
     public void preUpdate() {
         this.updatedAt = LocalDateTime.now();
     }
-
-    // getters & setters
 }
