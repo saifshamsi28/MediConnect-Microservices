@@ -2,6 +2,7 @@ package com.mediconnect.doctorservice.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -21,6 +22,9 @@ public class Doctor {
     @GeneratedValue
     private UUID id;
 
+    @Column(nullable = false, unique = true)
+    private UUID userId;
+
     @Column(nullable = false)
     private String name;
 
@@ -35,7 +39,7 @@ public class Doctor {
     private Integer experienceYears;
 
     @Column(nullable = false)
-    private boolean active = true;
+    private boolean active = false;
 
     private LocalDate dateOfJoining;
 
@@ -52,16 +56,14 @@ public class Doctor {
     @OneToMany(mappedBy = "doctor", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ConsultationSlot> consultationSlots;
 
-    // runs only first time before saving entity and save the creation timestamp
     @PrePersist
     public void prePersist() {
         this.createdAt = LocalDateTime.now();
     }
 
-    // run automatically everytime doctor entity will be updated
-    // before updating entity hibernate will call this method and update the timestamp
     @PreUpdate
     public void preUpdate() {
         this.updatedAt = LocalDateTime.now();
     }
 }
+

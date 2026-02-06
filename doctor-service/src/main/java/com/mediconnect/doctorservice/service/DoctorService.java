@@ -20,11 +20,12 @@ public class DoctorService {
 
         if (doctorRepository.existsByEmail(request.getEmail())) {
             throw new DoctorAlreadyExistsException(
-                    "Doctor with email \"" + request.getEmail() + "\" already exists!"
+                    "Doctor with email '" + request.getEmail() + "' already exists!"
             );
         }
 
         Doctor doctor = Doctor.builder()
+                .userId(request.getUserId())
                 .name(request.getName())
                 .email(request.getEmail())
                 .specialization(request.getSpecialization())
@@ -47,6 +48,7 @@ public class DoctorService {
             }
 
             return Doctor.builder()
+                    .userId(req.getUserId())
                     .name(req.getName())
                     .email(req.getEmail())
                     .specialization(req.getSpecialization())
