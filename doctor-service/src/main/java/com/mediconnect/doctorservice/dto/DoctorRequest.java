@@ -13,6 +13,6 @@ public class DoctorRequest {
     private String specialization;
     private String qualification;
     private Integer experienceYears;
-    private boolean active = true;
+    private boolean active = false;
     private LocalDate dateOfJoining;
 }
