@@ -14,10 +14,11 @@ public interface DoctorRepository extends JpaRepository<Doctor, UUID> {
 
     boolean existsByEmail(String email);
 
-    List<Doctor> findBySpecialization(String specialization);
+    List<Doctor> findByPrimarySpecialization(String primarySpecialization);
 
     List<Doctor> findByActiveTrue();
 
     Page<Doctor> findByActive(boolean active, Pageable pageable);
 }
+
 

@@ -1,8 +1,8 @@
 package com.mediconnect.doctorservice.controller;
 
-import com.mediconnect.doctorservice.dto.ApiResponse;
-import com.mediconnect.doctorservice.dto.DoctorRequest;
-import com.mediconnect.doctorservice.dto.DoctorResponse;
+import com.mediconnect.doctorservice.dto.responseDtos.ApiResponse;
+import com.mediconnect.doctorservice.dto.requestDtos.DoctorRequest;
+import com.mediconnect.doctorservice.dto.responseDtos.DoctorResponse;
 import com.mediconnect.doctorservice.service.DoctorService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -50,6 +50,5 @@ public class DoctorController {
     public ResponseEntity<DoctorResponse> getDoctorById(@PathVariable UUID doctorId) {
         return ResponseEntity.ok(doctorService.getDoctorById(doctorId));
     }
-
 }
 
