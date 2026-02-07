@@ -1,4 +1,4 @@
-package com.mediconnect.doctorservice.dto;
+package com.mediconnect.doctorservice.dto.requestDtos;
 
 import lombok.Data;
 import java.time.LocalDate;
@@ -10,9 +10,8 @@ public class DoctorRequest {
     private UUID userId;
     private String name;
     private String email;
-    private String specialization;
-    private String qualification;
-    private Integer experienceYears;
+    private String primarySpecialization;
     private boolean active = false;
     private LocalDate dateOfJoining;
 }
+

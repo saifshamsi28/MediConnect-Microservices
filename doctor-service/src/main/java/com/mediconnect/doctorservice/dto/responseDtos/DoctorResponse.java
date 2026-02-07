@@ -1,4 +1,4 @@
-package com.mediconnect.doctorservice.dto;
+package com.mediconnect.doctorservice.dto.responseDtos;
 
 import lombok.Builder;
 import lombok.Data;
@@ -14,9 +14,7 @@ public class DoctorResponse {
     private UUID userId;
     private String name;
     private String email;
-    private String specialization;
-    private Integer experienceYears;
+    private String primarySpecialization;
     private boolean active;
     private LocalDate dateOfJoining;
 }
-

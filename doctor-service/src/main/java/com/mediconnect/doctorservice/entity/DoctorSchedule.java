@@ -1,12 +1,16 @@
 package com.mediconnect.doctorservice.entity;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 
 @Entity
 @Table(name = "doctor_schedule")
+@Getter
+@Setter
 public class DoctorSchedule {
     //Sometimes a doctor’s regular schedule changes for a particular date. so this class
     //will help to override
