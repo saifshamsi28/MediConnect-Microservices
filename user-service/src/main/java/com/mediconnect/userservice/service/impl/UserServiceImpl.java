@@ -12,21 +12,5 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
-    private final UserRepository userRepository;
-    private final PasswordEncoder passwordEncoder;
 
-    @Override
-    public void registerUser(UserRegisterRequest request) {
-        if(userRepository.existsByUsername(request.getUsername())){
-            throw new UserAlreadyExistException("Username Already Exists");
-        }
-        User user=User.builder()
-                .username(request.getUsername())
-                .password(passwordEncoder.encode(request.getPassword()))
-                .role(request.getRole())
-                .enabled(true)
-                .build();
-
-        userRepository.save(user);
-    }
 }
