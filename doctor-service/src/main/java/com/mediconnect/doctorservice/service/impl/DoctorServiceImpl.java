@@ -10,6 +10,8 @@ import com.mediconnect.doctorservice.exception.DoctorNotFoundException;
 import com.mediconnect.doctorservice.repository.DoctorRepository;
 import com.mediconnect.doctorservice.service.DoctorService;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -24,6 +26,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class DoctorServiceImpl implements DoctorService {
 
+    private static final Logger log = LoggerFactory.getLogger(DoctorServiceImpl.class);
     private final DoctorRepository doctorRepository;
 
     @Override
@@ -49,7 +52,7 @@ public class DoctorServiceImpl implements DoctorService {
     }
 
     @Override
-    public List<DoctorResponse> createDoctorsBulk(List<DoctorRequest> requests) {
+    public ApiResponse<List<DoctorResponse>> createDoctorsBulk(List<DoctorRequest> requests) {
 
         List<Doctor> doctors = requests.stream().map(req -> {
 
@@ -72,9 +75,27 @@ public class DoctorServiceImpl implements DoctorService {
 
         List<Doctor> savedDoctors = doctorRepository.saveAll(doctors);
 
-        return savedDoctors.stream()
+        List<DoctorResponse> doctorResponses= savedDoctors.stream()
                 .map(this::toDoctorResponse)
-                .collect(Collectors.toList());
+                .toList();
+        Meta meta = Meta.builder()
+                .matched(savedDoctors.size())
+                .returned(doctorResponses.size())
+                .page(0)
+                .size(10)
+                .totalPages(1)
+                .sortBy(doctorResponses.getFirst().getPrimarySpecialization())
+                .order(doctorResponses.getFirst().getName())
+                .active(doctorResponses.getFirst().isActive())
+                .build();
+
+        return ApiResponse.<List<DoctorResponse>>builder()
+                .data(doctorResponses)
+                .meta(meta)
+                .success(true)
+                .message("Doctor added successfully")
+                .build();
+
     }
 
     @Override
@@ -124,14 +145,45 @@ public class DoctorServiceImpl implements DoctorService {
     }
 
     @Override
-    public DoctorResponse getDoctorById(UUID doctorId) {
+    public ApiResponse<DoctorResponse> getDoctorById(UUID doctorId) {
 
         Doctor doctor = doctorRepository.findById(doctorId)
                 .orElseThrow(() ->
                         new DoctorNotFoundException("Doctor not found with id: " + doctorId)
                 );
+//        log.info("fetched doctor: {}", doctor);
 
-        return toDoctorResponse(doctor);
+        Meta meta = Meta.builder()
+                .matched(1)
+                .returned(1)
+                .page(0)
+                .size(1)
+                .totalPages(1)
+                .sortBy(null)
+                .order(null)
+                .active(doctor.isActive())
+                .build();
+
+        return ApiResponse.<DoctorResponse>builder()
+                .data(toDoctorResponse(doctor))
+                .success(true)
+                .message("Doctor retrieved successfully")
+                .meta(meta)
+                .build();
+    }
+
+    @Override
+    public ApiResponse<String> deleteDoctorById(UUID doctorId) {
+        if(!doctorRepository.existsById(doctorId)){
+            throw new DoctorNotFoundException("No doctor found with: "+doctorId);
+        }
+
+        doctorRepository.deleteById(doctorId);
+        return ApiResponse.<String>builder()
+                .success(true)
+                .message("Doctor deleted successfully")
+                .data("Deleted")
+                .build();
     }
 
     private DoctorResponse toDoctorResponse(Doctor doctor) {

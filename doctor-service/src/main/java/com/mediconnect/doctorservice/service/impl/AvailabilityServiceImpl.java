@@ -1,7 +1,9 @@
 package com.mediconnect.doctorservice.service.impl;
 
 import com.mediconnect.doctorservice.dto.requestDtos.AvailabilityRequest;
+import com.mediconnect.doctorservice.dto.responseDtos.ApiResponse;
 import com.mediconnect.doctorservice.dto.responseDtos.AvailabilityResponse;
+import com.mediconnect.doctorservice.dto.responseDtos.Meta;
 import com.mediconnect.doctorservice.entity.Doctor;
 import com.mediconnect.doctorservice.entity.DoctorAvailability;
 import com.mediconnect.doctorservice.exception.DoctorNotFoundException;
@@ -65,7 +67,7 @@ public class AvailabilityServiceImpl implements AvailabilityService {
 
 
     @Override
-    public List<AvailabilityResponse> getAvailabilityByDoctor(UUID doctorId) {
+    public ApiResponse<List<AvailabilityResponse>> getAvailabilityByDoctor(UUID doctorId) {
 
         if(!doctorRepository.existsById(doctorId)){
             throw new DoctorNotFoundException("Invalid doctor id: "+doctorId);
@@ -74,9 +76,27 @@ public class AvailabilityServiceImpl implements AvailabilityService {
         List<DoctorAvailability> list =
                 availabilityRepository.findByDoctorId(doctorId);
 
-        return list.stream()
+        List<AvailabilityResponse> availabilityResponses=list.stream()
                 .map(this::toResponse)
-                .collect(Collectors.toList());
+                .toList();
+
+        Meta meta = Meta.builder()
+                .matched(list.size())
+                .returned(availabilityResponses.size())
+                .page(0)
+                .size(10)
+                .totalPages(10)
+                .sortBy(null)
+                .order(null)
+                .active(true)
+                .build();
+
+        return ApiResponse.<List<AvailabilityResponse>>builder()
+                .success(true)
+                .message("All availability fetch for doctor")
+                .meta(meta)
+                .data(availabilityResponses)
+                .build();
     }
 
     @Override

@@ -2,6 +2,7 @@ package com.mediconnect.doctorservice.service;
 
 
 import com.mediconnect.doctorservice.dto.requestDtos.AvailabilityRequest;
+import com.mediconnect.doctorservice.dto.responseDtos.ApiResponse;
 import com.mediconnect.doctorservice.dto.responseDtos.AvailabilityResponse;
 
 import java.util.List;
@@ -11,7 +12,7 @@ public interface AvailabilityService {
 
     AvailabilityResponse addAvailability(AvailabilityRequest request);
 
-    List<AvailabilityResponse> getAvailabilityByDoctor(UUID doctorId);
+    ApiResponse<List<AvailabilityResponse>> getAvailabilityByDoctor(UUID doctorId);
 
     AvailabilityResponse updateAvailability(Long availabilityId, AvailabilityRequest request);
 
