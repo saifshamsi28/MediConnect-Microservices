@@ -1,6 +1,7 @@
 package com.mediconnect.doctorservice.controller;
 
 import com.mediconnect.doctorservice.dto.requestDtos.AvailabilityRequest;
+import com.mediconnect.doctorservice.dto.responseDtos.ApiResponse;
 import com.mediconnect.doctorservice.dto.responseDtos.AvailabilityResponse;
 import com.mediconnect.doctorservice.service.AvailabilityService;
 import lombok.RequiredArgsConstructor;
@@ -28,7 +29,7 @@ public class AvailabilityController {
     }
 
     @GetMapping("/{doctorId}")
-    public ResponseEntity<List<AvailabilityResponse>> getAvailability(
+    public ResponseEntity<ApiResponse<List<AvailabilityResponse>>> getAvailability(
             @PathVariable UUID doctorId) {
 
         return ResponseEntity.ok(
@@ -47,10 +48,15 @@ public class AvailabilityController {
     }
 
     @DeleteMapping("/{availabilityId}")
-    public ResponseEntity<Void> deleteAvailability(
+    public ResponseEntity<ApiResponse<String>> deleteAvailability(
             @PathVariable Long availabilityId) {
 
         availabilityService.deleteAvailability(availabilityId);
-        return ResponseEntity.noContent().build();
+        ApiResponse<String> response = ApiResponse.<String>builder()
+                .success(true)
+                .message("Availability deleted successfully")
+                .data("Deleted")
+                .build();
+        return ResponseEntity.ok(response);
     }
 }
