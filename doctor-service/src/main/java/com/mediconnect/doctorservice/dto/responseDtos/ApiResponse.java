@@ -1,4 +1,4 @@
-package com.mediconnect.doctorservice.dto;
+package com.mediconnect.doctorservice.dto.responseDtos;
 
 import lombok.Builder;
 import lombok.Data;
