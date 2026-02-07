@@ -32,7 +32,7 @@ public class User {
     private Role role;
 
     @Column(nullable = false)
-    private Boolean enabled;
+    private Boolean enabled=true;
 
     @Column(nullable = false,updatable = false)
     @CreationTimestamp

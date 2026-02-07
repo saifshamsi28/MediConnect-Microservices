@@ -3,6 +3,7 @@ package com.mediconnect.userservice.exception;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -31,7 +32,7 @@ public class GlobalExceptionHandler {
         ApiErrorResponse response=ApiErrorResponse.builder()
                 .timeStamp(LocalDateTime.now())
                 .statusCode(HttpStatus.CONFLICT)
-                .error("User Already Exist")
+                .error("User Already Exist with Username")
                 .message(e.getMessage())
                 .path(request.getRequestURI())
                 .build();
@@ -51,6 +52,7 @@ public class GlobalExceptionHandler {
 
         return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
     }
+
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ApiErrorResponse> handleGenericException(Exception e, HttpServletRequest request){
