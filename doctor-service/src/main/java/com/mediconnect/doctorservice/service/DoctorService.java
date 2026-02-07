@@ -11,7 +11,7 @@ public interface DoctorService {
 
     DoctorResponse createDoctor(DoctorRequest request);
 
-    List<DoctorResponse> createDoctorsBulk(List<DoctorRequest> requests);
+    ApiResponse<List<DoctorResponse>> createDoctorsBulk(List<DoctorRequest> requests);
 
     ApiResponse<List<DoctorResponse>> getDoctorsByFilters(
             Boolean active,
@@ -21,6 +21,8 @@ public interface DoctorService {
             String order
     );
 
-    DoctorResponse getDoctorById(UUID doctorId);
+    ApiResponse<DoctorResponse> getDoctorById(UUID doctorId);
+
+    ApiResponse<String> deleteDoctorById(UUID doctorId);
 
 }

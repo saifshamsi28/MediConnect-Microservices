@@ -5,6 +5,7 @@ import com.mediconnect.doctorservice.dto.requestDtos.DoctorRequest;
 import com.mediconnect.doctorservice.dto.responseDtos.DoctorResponse;
 import com.mediconnect.doctorservice.service.DoctorService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,8 +30,9 @@ public class DoctorController {
     }
 
     @PostMapping("/bulk")
-    public List<DoctorResponse> createDoctorsBulk(@RequestBody List<DoctorRequest> requests) {
-        return doctorService.createDoctorsBulk(requests);
+    public ResponseEntity<ApiResponse<List<DoctorResponse>>> createDoctorsBulk(@RequestBody List<DoctorRequest> requests) {
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(doctorService.createDoctorsBulk(requests));
     }
 
     @GetMapping
@@ -47,8 +49,13 @@ public class DoctorController {
     }
 
     @GetMapping("/{doctorId}")
-    public ResponseEntity<DoctorResponse> getDoctorById(@PathVariable UUID doctorId) {
+    public ResponseEntity<ApiResponse<DoctorResponse>> getDoctorById(@PathVariable UUID doctorId) {
         return ResponseEntity.ok(doctorService.getDoctorById(doctorId));
+    }
+
+    @DeleteMapping("/{doctorId}")
+    public ResponseEntity<ApiResponse<String>> deleteDoctorById(@PathVariable UUID doctorId) {
+        return ResponseEntity.ok(doctorService.deleteDoctorById(doctorId));
     }
 }
 
