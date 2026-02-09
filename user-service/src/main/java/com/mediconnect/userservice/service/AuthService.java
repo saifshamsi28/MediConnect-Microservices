@@ -1,10 +1,18 @@
 package com.mediconnect.userservice.service;
 
-import com.mediconnect.userservice.requestDto.LoginRequest;
-import com.mediconnect.userservice.requestDto.UserRegisterRequest;
-import com.mediconnect.userservice.responseDto.LoginResponse;
+import com.mediconnect.userservice.dto.DoctorRequest;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
 
-public interface AuthService {
-    void registerUser(UserRegisterRequest request);
-    LoginResponse login(LoginRequest request);
+@Service
+@RequiredArgsConstructor
+@Slf4j
+public class AuthService {
+    private final KeycloakUserService keycloakUserService;
+
+    public void createDoctor(DoctorRequest request) {
+        String kId=keycloakUserService.createUser(request.getUsername(),request.getPassword(),request.getEmail(),request.getFirstName(),request.getLastName(),request.getRole());
+        log.info("kid: {}",kId);
+    }
 }
