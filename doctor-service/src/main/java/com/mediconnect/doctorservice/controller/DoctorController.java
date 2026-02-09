@@ -21,12 +21,10 @@ public class DoctorController {
     private final DoctorService doctorService;
 
     @PostMapping
-    public ResponseEntity<DoctorResponse> createDoctor(@RequestBody DoctorRequest request) {
-        DoctorResponse response = doctorService.createDoctor(request);
+    public ResponseEntity<ApiResponse<DoctorResponse>> createDoctor(@RequestBody DoctorRequest request) {
 
-        return ResponseEntity
-                .created(URI.create("/api/doctors/" + response.getDoctorId()))
-                .body(response);
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(doctorService.createDoctor(request));
     }
 
     @PostMapping("/bulk")
