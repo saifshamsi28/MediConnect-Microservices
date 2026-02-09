@@ -12,7 +12,8 @@ public class DoctorResponse {
 
     private UUID doctorId;
     private UUID userId;
-    private String name;
+    private String firstName;
+    private String lastName;
     private String email;
     private String primarySpecialization;
     private boolean active;
