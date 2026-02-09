@@ -40,6 +40,18 @@ public class GlobalExceptionHandler {
 
     }
 
+    @ExceptionHandler(RuntimeException.class)
+    public ResponseEntity<ApiErrorResponse> handleRuntimeException(RuntimeException e,HttpServletRequest request){
+        ApiErrorResponse response=ApiErrorResponse.builder()
+                .timeStamp(LocalDateTime.now())
+                .statusCode(HttpStatus.UNAUTHORIZED)
+                .error("Access Denied")
+                .message(e.getMessage())
+                .path(request.getRequestURI())
+                .build();
+        return new ResponseEntity<>(response,HttpStatus.UNAUTHORIZED);
+    }
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Map<String, String>> handleValidationErrors(
             MethodArgumentNotValidException ex) {
