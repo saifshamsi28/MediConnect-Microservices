@@ -9,7 +9,7 @@ import java.util.UUID;
 
 public interface DoctorService {
 
-    DoctorResponse createDoctor(DoctorRequest request);
+    ApiResponse<DoctorResponse> createDoctor(DoctorRequest request);
 
     ApiResponse<List<DoctorResponse>> createDoctorsBulk(List<DoctorRequest> requests);
 

@@ -30,7 +30,7 @@ public class DoctorServiceImpl implements DoctorService {
     private final DoctorRepository doctorRepository;
 
     @Override
-    public DoctorResponse createDoctor(DoctorRequest request) {
+    public ApiResponse<DoctorResponse> createDoctor(DoctorRequest request) {
 
         if (doctorRepository.existsByEmail(request.getEmail())) {
             throw new DoctorAlreadyExistsException(
@@ -40,7 +40,8 @@ public class DoctorServiceImpl implements DoctorService {
 
         Doctor doctor = Doctor.builder()
                 .userId(request.getUserId())
-                .name(request.getName())
+                .firstName(request.getFirstName())
+                .lastName(request.getLastName())
                 .email(request.getEmail())
                 .primarySpecialization(request.getPrimarySpecialization())
                 .active(request.isActive())
@@ -48,7 +49,12 @@ public class DoctorServiceImpl implements DoctorService {
                 .build();
 
         Doctor savedDoctor = doctorRepository.save(doctor);
-        return toDoctorResponse(savedDoctor);
+        return ApiResponse.<DoctorResponse>builder()
+                .data(toDoctorResponse(savedDoctor))
+                .success(true)
+                .message("Doctor created successfully")
+                .meta(null)
+                .build();
     }
 
     @Override
@@ -64,7 +70,8 @@ public class DoctorServiceImpl implements DoctorService {
 
             return Doctor.builder()
                     .userId(req.getUserId())
-                    .name(req.getName())
+                    .firstName(req.getFirstName())
+                    .lastName(req.getLastName())
                     .email(req.getEmail())
                     .primarySpecialization(req.getPrimarySpecialization())
                     .active(req.isActive())
@@ -85,7 +92,7 @@ public class DoctorServiceImpl implements DoctorService {
                 .size(10)
                 .totalPages(1)
                 .sortBy(doctorResponses.getFirst().getPrimarySpecialization())
-                .order(doctorResponses.getFirst().getName())
+                .order(doctorResponses.getFirst().getFirstName()+doctorResponses.getFirst().getLastName())
                 .active(doctorResponses.getFirst().isActive())
                 .build();
 
@@ -194,7 +201,8 @@ public class DoctorServiceImpl implements DoctorService {
                 .primarySpecialization(doctor.getPrimarySpecialization())
                 .dateOfJoining(doctor.getDateOfJoining())
                 .email(doctor.getEmail())
-                .name(doctor.getName())
+                .firstName(doctor.getFirstName())
+                .lastName(doctor.getLastName())
                 .build();
     }
 }

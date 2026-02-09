@@ -8,7 +8,8 @@ import java.util.UUID;
 public class DoctorRequest {
 
     private UUID userId;
-    private String name;
+    private String firstName;
+    private String lastName;
     private String email;
     private String primarySpecialization;
     private boolean active = false;
