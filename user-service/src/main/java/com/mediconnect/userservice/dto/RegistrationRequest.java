@@ -9,17 +9,18 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class DoctorRequest {
+public class RegistrationRequest {
     @NotBlank(message = "Username is required")
     @Size(min = 3, max = 50, message = "Username must be between 3 and 50 characters")
     private String username;
 
+    @NotBlank(message = "Email is required")
+    @jakarta.validation.constraints.Email(message = "Email must be valid")
+    private String email;
+
     @NotBlank(message = "Password is required")
     @Size(min = 6, message = "Password must be at least 6 characters")
     private String password;
-
-    @NotNull(message = "Role is required")
-    private Role role;
 
     @NotBlank(message = "First name is required")
     @Size(max = 30, message = "First name must not exceed 30 characters")
@@ -29,11 +30,8 @@ public class DoctorRequest {
     @Size(max = 30, message = "Last name must not exceed 30 characters")
     private String lastName;
 
-    @NotBlank(message = "Email is required")
-    @jakarta.validation.constraints.Email(message = "Email must be valid")
-    private String email;
+    @NotNull(message = "Role is required")
+    private Role role;
 
-    @NotBlank(message = "Primary specialization is required")
-    @Size(max = 100, message = "Specialization must not exceed 100 characters")
-    private String primarySpecialization;
+
 }

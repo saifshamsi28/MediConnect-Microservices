@@ -1,6 +1,6 @@
 package com.mediconnect.userservice.controller;
 
-import com.mediconnect.userservice.dto.DoctorRequest;
+import com.mediconnect.userservice.dto.RegistrationRequest;
 import com.mediconnect.userservice.dto.LoginRequest;
 import com.mediconnect.userservice.dto.LoginResponse;
 import com.mediconnect.userservice.service.AuthService;
@@ -21,9 +21,9 @@ public class AuthController {
 
     private final AuthService authService;
 
-    @PostMapping("/doctor/register")
-    public ResponseEntity<String> registerUser(@Valid @RequestBody DoctorRequest request){
-        authService.createDoctor(request);
+    @PostMapping("/register")
+    public ResponseEntity<String> registerUser(@Valid @RequestBody RegistrationRequest request){
+        authService.create(request);
         return new ResponseEntity<>("Registered Successfully", HttpStatus.CREATED);
     }
 
