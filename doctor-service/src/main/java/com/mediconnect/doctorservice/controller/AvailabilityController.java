@@ -29,12 +29,10 @@ public class AvailabilityController {
     }
 
     @GetMapping("/{doctorId}")
-    public ResponseEntity<ApiResponse<List<AvailabilityResponse>>> getAvailability(
+    public ApiResponse<List<AvailabilityResponse>> getAvailability(
             @PathVariable UUID doctorId) {
 
-        return ResponseEntity.ok(
-                availabilityService.getAvailabilityByDoctor(doctorId)
-        );
+        return availabilityService.getAvailabilityByDoctor(doctorId);
     }
 
     @PutMapping("/{availabilityId}")
