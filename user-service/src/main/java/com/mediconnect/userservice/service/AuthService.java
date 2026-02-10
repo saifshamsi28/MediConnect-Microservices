@@ -1,8 +1,11 @@
 package com.mediconnect.userservice.service;
 
-import com.mediconnect.userservice.dto.DoctorRequest;
+import com.mediconnect.userservice.dto.RegistrationRequest;
 import com.mediconnect.userservice.dto.LoginRequest;
 import com.mediconnect.userservice.dto.LoginResponse;
+import com.mediconnect.userservice.entity.User;
+import com.mediconnect.userservice.exception.UserAlreadyExistException;
+import com.mediconnect.userservice.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -18,6 +21,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 @Slf4j
 public class AuthService {
+    private final UserRepository userRepository;
     private final KeycloakUserService keycloakUserService;
     private final WebClient webClient;
 
@@ -31,9 +35,33 @@ public class AuthService {
     private String clientId;
 
 
-    public void createDoctor(DoctorRequest request) {
+    public void create(RegistrationRequest request) {
+        if(userRepository.existsByUsername(request.getUsername())){
+            throw new UserAlreadyExistException("Username already exits");
+        }
+
+        if(userRepository.existsByEmail(request.getEmail())){
+            throw new UserAlreadyExistException("Email already exits");
+        }
+
         String kId=keycloakUserService.createUser(request.getUsername(),request.getPassword(),request.getEmail(),request.getFirstName(),request.getLastName(),request.getRole());
         log.info("kid: {}",kId);
+        try {
+
+            User user = User.builder()
+                    .kid(kId)
+                    .username(request.getUsername())
+                    .email(request.getEmail())
+                    .firstName(request.getFirstName())
+                    .lastName(request.getLastName())
+                    .role(request.getRole())
+                    .build();
+            User savedUser=userRepository.save(user);
+        }catch (Exception e){
+            log.error("DB save failed, rolling back Keycloak user {}", kId);
+            keycloakUserService.deleteUserById(kId);
+            throw e;
+        }
     }
 
 

@@ -29,10 +29,16 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(UserAlreadyExistException.class)
     public ResponseEntity<ApiErrorResponse> handleUserAlreadyExistException(UserAlreadyExistException e,HttpServletRequest request){
+        String error;
+        if(e.getMessage().contains("Email")){
+            error="Email already exists";
+        }else {
+            error="Username already exists";
+        }
         ApiErrorResponse response=ApiErrorResponse.builder()
                 .timeStamp(LocalDateTime.now())
                 .statusCode(HttpStatus.CONFLICT)
-                .error("User Already Exist with Username")
+                .error(error)
                 .message(e.getMessage())
                 .path(request.getRequestURI())
                 .build();
@@ -40,17 +46,6 @@ public class GlobalExceptionHandler {
 
     }
 
-    @ExceptionHandler(RuntimeException.class)
-    public ResponseEntity<ApiErrorResponse> handleRuntimeException(RuntimeException e,HttpServletRequest request){
-        ApiErrorResponse response=ApiErrorResponse.builder()
-                .timeStamp(LocalDateTime.now())
-                .statusCode(HttpStatus.UNAUTHORIZED)
-                .error("Access Denied")
-                .message(e.getMessage())
-                .path(request.getRequestURI())
-                .build();
-        return new ResponseEntity<>(response,HttpStatus.UNAUTHORIZED);
-    }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Map<String, String>> handleValidationErrors(
