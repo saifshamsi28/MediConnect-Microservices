@@ -46,6 +46,7 @@ public class AuthService {
 
         String kId=keycloakUserService.createUser(request.getUsername(),request.getPassword(),request.getEmail(),request.getFirstName(),request.getLastName(),request.getRole());
         log.info("kid: {}",kId);
+
         try {
 
             User user = User.builder()
@@ -74,6 +75,25 @@ public class AuthService {
                         .with("client_id", clientId)
                         .with("username", request.getUsername())
                         .with("password", request.getPassword())
+                )
+                .retrieve()
+                .bodyToMono(Map.class)
+                .map(token -> LoginResponse.builder()
+                        .accessToken((String) token.get("access_token"))
+                        .refreshToken((String) token.get("refresh_token"))
+                        .expiresIn(((Number) token.get("expires_in")).longValue())
+                        .tokenType((String) token.get("token_type"))
+                        .build()
+                );
+    }
+
+    public Mono<LoginResponse> refreshToken(String refreshToken) {
+        return webClient.post()
+                .uri(serverUrl + "/realms/" + realm + "/protocol/openid-connect/token")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .body(BodyInserters.fromFormData("grant_type", "refresh_token")
+                        .with("client_id", clientId)
+                        .with("refresh_token", refreshToken)
                 )
                 .retrieve()
                 .bodyToMono(Map.class)
