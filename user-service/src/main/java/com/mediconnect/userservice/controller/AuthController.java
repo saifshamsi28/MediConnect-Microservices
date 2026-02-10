@@ -1,5 +1,6 @@
 package com.mediconnect.userservice.controller;
 
+import com.mediconnect.userservice.dto.RefreshTokenRequest;
 import com.mediconnect.userservice.dto.RegistrationRequest;
 import com.mediconnect.userservice.dto.LoginRequest;
 import com.mediconnect.userservice.dto.LoginResponse;
@@ -30,6 +31,11 @@ public class AuthController {
     @PostMapping("/login")
     public Mono<LoginResponse> login(@RequestBody LoginRequest request) {
         return authService.login(request);
+    }
+
+    @PostMapping("/refresh")
+    public Mono<LoginResponse> refresh(@RequestBody RefreshTokenRequest request) {
+        return authService.refreshToken(request.getRefreshToken());
     }
 
 }

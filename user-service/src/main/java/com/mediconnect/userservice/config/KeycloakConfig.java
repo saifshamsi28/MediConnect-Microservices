@@ -11,12 +11,6 @@ public class KeycloakConfig {
     @Value("${keycloak.serverUrl}")
     private String serverUrl;
 
-    @Value("${keycloak.realm}")
-    private String realm;
-
-    @Value("${keycloak.clientId}")
-    private String clientId;
-
     @Value("${keycloak.username}")
     private String username;
 
@@ -27,7 +21,7 @@ public class KeycloakConfig {
         return KeycloakBuilder.builder()
                 .serverUrl(serverUrl)
                 .realm("master")
-                .clientId(clientId)
+                .clientId("admin-cli")
                 .username(username)
                 .password(password)
                 .build();
