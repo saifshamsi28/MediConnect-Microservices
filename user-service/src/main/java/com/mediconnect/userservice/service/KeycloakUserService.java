@@ -78,4 +78,10 @@ public class KeycloakUserService {
 
     }
 
+    public void deleteUserById(String kId) {
+        keycloak.realm(REALM)
+                .users()
+                .get(kId)
+                .remove();
+    }
 }

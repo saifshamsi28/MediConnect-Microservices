@@ -12,6 +12,7 @@ import com.mediconnect.doctorservice.repository.DoctorAvailabilityRepository;
 import com.mediconnect.doctorservice.repository.DoctorRepository;
 import com.mediconnect.doctorservice.service.AvailabilityService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -21,6 +22,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class AvailabilityServiceImpl implements AvailabilityService {
 
     private final DoctorRepository doctorRepository;
@@ -41,7 +43,7 @@ public class AvailabilityServiceImpl implements AvailabilityService {
         }
 
         Optional<DoctorAvailability> existing =
-                availabilityRepository.findByDoctorIdAndDayOfWeek(
+                availabilityRepository.findByDoctor_IdAndDayOfWeek(
                         request.getDoctorId(), request.getDayOfWeek()
                 );
 
@@ -70,11 +72,14 @@ public class AvailabilityServiceImpl implements AvailabilityService {
     public ApiResponse<List<AvailabilityResponse>> getAvailabilityByDoctor(UUID doctorId) {
 
         if(!doctorRepository.existsById(doctorId)){
+            log.error("Doctor not found with id: {}",doctorId);
             throw new DoctorNotFoundException("Invalid doctor id: "+doctorId);
         }
 
         List<DoctorAvailability> list =
-                availabilityRepository.findByDoctorId(doctorId);
+                availabilityRepository.findByDoctor_Id(doctorId);
+
+        log.info("Fetched availability: {}",list.getFirst().getDayOfWeek());
 
         List<AvailabilityResponse> availabilityResponses=list.stream()
                 .map(this::toResponse)
