@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/api/doctors/schedules")
+@RequestMapping("/doctors/schedules")
 @RequiredArgsConstructor
 @Slf4j
 public class ScheduleController {

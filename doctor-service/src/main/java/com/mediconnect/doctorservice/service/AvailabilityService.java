@@ -10,7 +10,7 @@ import java.util.UUID;
 
 public interface AvailabilityService {
 
-    AvailabilityResponse addAvailability(AvailabilityRequest request);
+    ApiResponse<AvailabilityResponse> addAvailability(AvailabilityRequest request);
 
     ApiResponse<List<AvailabilityResponse>> getAvailabilityByDoctor(UUID doctorId);
 

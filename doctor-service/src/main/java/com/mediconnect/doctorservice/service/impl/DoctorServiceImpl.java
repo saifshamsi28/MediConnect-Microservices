@@ -108,6 +108,7 @@ public class DoctorServiceImpl implements DoctorService {
     @Override
     public ApiResponse<List<DoctorResponse>> getDoctorsByFilters(
             Boolean active,
+            String name,
             int page,
             int size,
             String sortBy,
@@ -121,16 +122,32 @@ public class DoctorServiceImpl implements DoctorService {
 
         Page<Doctor> doctorPage;
 
-        if (active == null) {
-            doctorPage = doctorRepository.findAll(pageable);
+        // Search by name and active status
+        if (name != null && !name.trim().isEmpty()) {
+            if (active == null) {
+                doctorPage = doctorRepository.findByFirstNameContainingIgnoreCaseOrLastNameContainingIgnoreCase(
+                        name, name, pageable
+                );
+            } else {
+                doctorPage = doctorRepository.findByActiveAndFirstNameContainingIgnoreCaseOrActiveAndLastNameContainingIgnoreCase(
+                        active, name, active, name, pageable
+                );
+            }
         } else {
-            doctorPage = doctorRepository.findByActive(active, pageable);
+            // Original logic when no name search
+            if (active == null) {
+                doctorPage = doctorRepository.findAll(pageable);
+            } else {
+                doctorPage = doctorRepository.findByActive(active, pageable);
+            }
         }
 
         List<DoctorResponse> responses = doctorPage.getContent()
                 .stream()
                 .map(this::toDoctorResponse)
                 .toList();
+
+//        log.info("Doctor service: No of doctors fetched: {}",responses.size());
 
         Meta meta = Meta.builder()
                 .matched((int) doctorPage.getTotalElements())

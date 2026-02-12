@@ -30,7 +30,7 @@ public class AvailabilityServiceImpl implements AvailabilityService {
 
 
     @Override
-    public AvailabilityResponse addAvailability(AvailabilityRequest request) {
+    public ApiResponse<AvailabilityResponse> addAvailability(AvailabilityRequest request) {
 
         Doctor doctor = doctorRepository.findById(request.getDoctorId())
                 .orElseThrow(() ->
@@ -64,7 +64,12 @@ public class AvailabilityServiceImpl implements AvailabilityService {
         }
 
         DoctorAvailability saved = availabilityRepository.save(availability);
-        return toResponse(saved);
+
+        return ApiResponse.<AvailabilityResponse>builder()
+                .data(toResponse(saved))
+                .message("Availability created successfully")
+                .meta(null)
+                .build();
     }
 
 
@@ -79,7 +84,7 @@ public class AvailabilityServiceImpl implements AvailabilityService {
         List<DoctorAvailability> list =
                 availabilityRepository.findByDoctor_Id(doctorId);
 
-        log.info("Fetched availability: {}",list.getFirst().getDayOfWeek());
+//        log.info("Fetched availability: {}",list.getFirst().getDayOfWeek());
 
         List<AvailabilityResponse> availabilityResponses=list.stream()
                 .map(this::toResponse)

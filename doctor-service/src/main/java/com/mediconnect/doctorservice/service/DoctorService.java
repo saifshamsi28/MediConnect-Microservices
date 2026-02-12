@@ -15,6 +15,7 @@ public interface DoctorService {
 
     ApiResponse<List<DoctorResponse>> getDoctorsByFilters(
             Boolean active,
+            String name,
             int page,
             int size,
             String sortBy,

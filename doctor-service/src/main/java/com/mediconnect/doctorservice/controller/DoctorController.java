@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/api/doctors")
+@RequestMapping("/doctors")
 @RequiredArgsConstructor
 public class DoctorController {
 
@@ -36,13 +36,14 @@ public class DoctorController {
     @GetMapping
     public ResponseEntity<ApiResponse<List<DoctorResponse>>> getDoctorsByFilters(
             @RequestParam(required = false) Boolean active,
+            @RequestParam(required = false) String name,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
-            @RequestParam(defaultValue = "name") String sortBy,
+            @RequestParam(defaultValue = "firstName") String sortBy,
             @RequestParam(defaultValue = "asc") String order) {
 
         return ResponseEntity.ok(
-                doctorService.getDoctorsByFilters(active, page, size, sortBy, order)
+                doctorService.getDoctorsByFilters(active, name, page, size, sortBy, order)
         );
     }
 
