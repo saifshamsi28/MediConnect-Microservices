@@ -34,7 +34,7 @@ public class Doctor {
     private String email;
 
     //showing only primary specialization for fast query matching
-    @Column(nullable = false)
+    @Column(nullable = true)
     private String primarySpecialization;
 
     private boolean active = false;

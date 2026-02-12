@@ -11,6 +11,8 @@ import java.util.UUID;
 public interface DoctorRepository extends JpaRepository<Doctor, UUID> {
 
     Optional<Doctor> findByEmail(String email);
+    
+    Optional<Doctor> findByUserId(UUID userId);
 
     boolean existsByEmail(String email);
 
@@ -28,5 +30,6 @@ public interface DoctorRepository extends JpaRepository<Doctor, UUID> {
             boolean active1, String firstName, boolean active2, String lastName, Pageable pageable
     );
 }
+
 
 
