@@ -1,9 +1,12 @@
 package com.mediconnect.userservice.service;
 
+import com.mediconnect.userservice.client.DoctorClient;
+import com.mediconnect.userservice.dto.DoctorRequest;
 import com.mediconnect.userservice.dto.RegistrationRequest;
 import com.mediconnect.userservice.dto.LoginRequest;
 import com.mediconnect.userservice.dto.LoginResponse;
 import com.mediconnect.userservice.entity.User;
+import com.mediconnect.userservice.enums.Role;
 import com.mediconnect.userservice.exception.UserAlreadyExistException;
 import com.mediconnect.userservice.repository.UserRepository;
 import jakarta.servlet.http.Cookie;
@@ -14,6 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
@@ -21,6 +25,7 @@ import reactor.core.publisher.Mono;
 
 import java.util.Arrays;
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * Authentication Service
@@ -40,6 +45,8 @@ public class AuthService {
     private final UserRepository userRepository;
     private final KeycloakUserService keycloakUserService;
     private final WebClient webClient;
+    private final DoctorClient doctorClient;
+
 
     @Value("${keycloak.serverUrl}")
     private String serverUrl;
@@ -65,6 +72,8 @@ public class AuthService {
      * @param request User registration details
      * @throws UserAlreadyExistException if username or email already exists
      */
+
+    @Transactional
     public void create(RegistrationRequest request) {
         if (userRepository.existsByUsername(request.getUsername())) {
             throw new UserAlreadyExistException("Username already exists");
@@ -96,11 +105,26 @@ public class AuthService {
                     .build();
 
             userRepository.save(user);
+
+            if (request.getRole() == Role.DOCTOR) {
+
+                DoctorRequest doctorRequest = new DoctorRequest();
+                doctorRequest.setUserId(UUID.fromString(keycloakId));
+                doctorRequest.setFirstName(request.getFirstName());
+                doctorRequest.setLastName(request.getLastName());
+                doctorRequest.setEmail(request.getEmail());
+                doctorRequest.setActive(false);
+
+                doctorClient.createDoctor(doctorRequest);
+            }
+
+
             log.info("User saved to database: {}", request.getUsername());
 
         } catch (Exception e) {
             log.error("Database save failed, rolling back Keycloak user {}", keycloakId, e);
             keycloakUserService.deleteUserById(keycloakId);
+            userRepository.deleteByKid(keycloakId);
             throw e;
         }
     }
