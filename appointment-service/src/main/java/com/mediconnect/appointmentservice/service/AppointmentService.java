@@ -16,4 +16,6 @@ public interface AppointmentService {
     List<AppointmentResponse> getAppointmentsByPatient(UUID patientId);
 
     List<AppointmentResponse> getAppointmentsByDoctor(UUID doctorId);
+
+    AppointmentResponse cancelByAppointmentId(UUID id);
 }

@@ -31,6 +31,7 @@ public class CorsConfig {
         corsConfig.setAllowedOrigins(List.of(
             "http://localhost:5173",  // Vite dev server
             "http://localhost:5174",   // Alternative React dev server
+            "http://localhost:8084",   // Alternative React dev server
             "http://localhost:3000"   // Alternative React dev server
         ));
         
