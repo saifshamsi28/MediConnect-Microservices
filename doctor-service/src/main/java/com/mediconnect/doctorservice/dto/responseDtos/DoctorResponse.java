@@ -4,6 +4,7 @@ import lombok.Builder;
 import lombok.Data;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.UUID;
 
 @Data
@@ -18,4 +19,13 @@ public class DoctorResponse {
     private String primarySpecialization;
     private boolean active;
     private LocalDate dateOfJoining;
+    
+    // Profile completion data
+    private List<EducationResponse> educationList;
+    private List<ExperienceResponse> experienceList;
+    private List<AvailabilityResponse> availabilityList;
+    
+    // Computed flag for profile completeness
+    private boolean profileComplete;
 }
+
