@@ -73,4 +73,15 @@ public class AppointmentController {
                 return ResponseEntity.ok(response);
         }
 
+        @PatchMapping("/{appointmentId}")
+        public ResponseEntity<ApiResponse<AppointmentResponse>> cancelAppointment(
+                @PathVariable("appointmentId") UUID appointmentId) {
+
+                return ResponseEntity.ok(ApiResponse.<AppointmentResponse>builder()
+                        .success(true)
+                        .message("Appointment cancelled successfully")
+                        .data(appointmentService.cancelByAppointmentId(appointmentId))
+                        .build());
+        }
+
 }

@@ -8,6 +8,7 @@ import com.mediconnect.appointmentservice.DTO.responseDTO.SlotResponse;
 import com.mediconnect.appointmentservice.client.DoctorClient;
 import com.mediconnect.appointmentservice.entity.Appointment;
 import com.mediconnect.appointmentservice.enums.AppointmentStatus;
+import com.mediconnect.appointmentservice.exception.AppointmentNotFoundException;
 import com.mediconnect.appointmentservice.exception.DoctorNotAvailableException;
 import com.mediconnect.appointmentservice.repository.AppointmentRepository;
 import com.mediconnect.appointmentservice.service.AppointmentService;
@@ -178,5 +179,17 @@ public class AppointmentServiceImpl implements AppointmentService {
                                 .map(this::mapToResponse)
                                 .toList();
         }
+
+        @Override
+        public AppointmentResponse cancelByAppointmentId(UUID id) {
+                Appointment appointment=appointmentRepository.findById(id)
+                        .orElseThrow(()-> new AppointmentNotFoundException("No appointment found with id"));
+
+                appointment.setStatus(AppointmentStatus.CANCELLED);
+                appointmentRepository.save(appointment);
+
+                return mapToResponse(appointment);
+        }
+
 
 }
