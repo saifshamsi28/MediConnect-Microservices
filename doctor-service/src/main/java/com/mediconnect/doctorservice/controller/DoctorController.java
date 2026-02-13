@@ -8,7 +8,9 @@ import com.mediconnect.doctorservice.dto.responseDtos.DoctorResponse;
 import com.mediconnect.doctorservice.dto.responseDtos.EducationResponse;
 import com.mediconnect.doctorservice.dto.responseDtos.ExperienceResponse;
 import com.mediconnect.doctorservice.service.DoctorService;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -22,6 +24,7 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/doctors")
 @RequiredArgsConstructor
+@Slf4j
 public class DoctorController {
 
     private final DoctorService doctorService;
@@ -34,7 +37,8 @@ public class DoctorController {
     }
 
     @PostMapping("/bulk")
-    public ResponseEntity<ApiResponse<List<DoctorResponse>>> createDoctorsBulk(@RequestBody List<DoctorRequest> requests) {
+    public ResponseEntity<ApiResponse<List<DoctorResponse>>> createDoctorsBulk(
+            @RequestBody List<DoctorRequest> requests) {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(doctorService.createDoctorsBulk(requests));
     }
@@ -46,25 +50,27 @@ public class DoctorController {
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
             @RequestParam(defaultValue = "firstName") String sortBy,
-            @RequestParam(defaultValue = "asc") String order) {
+            @RequestParam(defaultValue = "asc") String order,
+            HttpServletRequest request) {
 
+        log.info("Request received in doctor controller at: {}", request.getRequestURI());
+        // log.info("parameters: {}", name,sct);
         return ResponseEntity.ok(
-                doctorService.getDoctorsByFilters(active, name, page, size, sortBy, order)
-        );
+                doctorService.getDoctorsByFilters(active, name, page, size, sortBy, order));
     }
 
     @GetMapping("/{doctorId}")
     public ResponseEntity<ApiResponse<DoctorResponse>> getDoctorById(@PathVariable UUID doctorId) {
         return ResponseEntity.ok(doctorService.getDoctorById(doctorId));
     }
-    
+
     @GetMapping("/me")
     @PreAuthorize("hasRole('DOCTOR')")
     public ResponseEntity<ApiResponse<DoctorResponse>> getMyProfile(Authentication authentication) {
         UUID userId = UUID.fromString(authentication.getName());
         return ResponseEntity.ok(doctorService.getDoctorByUserId(userId));
     }
-    
+
     @PutMapping("/{doctorId}")
     @PreAuthorize("hasRole('DOCTOR')")
     public ResponseEntity<ApiResponse<DoctorResponse>> updateDoctor(
@@ -74,7 +80,7 @@ public class DoctorController {
         UUID userId = UUID.fromString(authentication.getName());
         return ResponseEntity.ok(doctorService.updateDoctor(doctorId, request, userId));
     }
-    
+
     @PostMapping("/{doctorId}/education")
     @PreAuthorize("hasRole('DOCTOR')")
     public ResponseEntity<ApiResponse<EducationResponse>> addEducation(
@@ -85,7 +91,7 @@ public class DoctorController {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(doctorService.addEducation(doctorId, request, userId));
     }
-    
+
     @PostMapping("/{doctorId}/experience")
     @PreAuthorize("hasRole('DOCTOR')")
     public ResponseEntity<ApiResponse<ExperienceResponse>> addExperience(
@@ -96,7 +102,29 @@ public class DoctorController {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(doctorService.addExperience(doctorId, request, userId));
     }
-    
+
+    @PutMapping("/{doctorId}/education/{educationId}")
+    @PreAuthorize("hasRole('DOCTOR')")
+    public ResponseEntity<ApiResponse<EducationResponse>> updateEducation(
+            @PathVariable UUID doctorId,
+            @PathVariable Long educationId,
+            @RequestBody EducationRequest request,
+            Authentication authentication) {
+        UUID userId = UUID.fromString(authentication.getName());
+        return ResponseEntity.ok(doctorService.updateEducation(doctorId, educationId, request, userId));
+    }
+
+    @PutMapping("/{doctorId}/experience/{experienceId}")
+    @PreAuthorize("hasRole('DOCTOR')")
+    public ResponseEntity<ApiResponse<ExperienceResponse>> updateExperience(
+            @PathVariable UUID doctorId,
+            @PathVariable Long experienceId,
+            @RequestBody ExperienceRequest request,
+            Authentication authentication) {
+        UUID userId = UUID.fromString(authentication.getName());
+        return ResponseEntity.ok(doctorService.updateExperience(doctorId, experienceId, request, userId));
+    }
+
     @DeleteMapping("/{doctorId}/education/{educationId}")
     @PreAuthorize("hasRole('DOCTOR')")
     public ResponseEntity<ApiResponse<String>> removeEducation(
@@ -106,7 +134,7 @@ public class DoctorController {
         UUID userId = UUID.fromString(authentication.getName());
         return ResponseEntity.ok(doctorService.removeEducation(doctorId, educationId, userId));
     }
-    
+
     @DeleteMapping("/{doctorId}/experience/{experienceId}")
     @PreAuthorize("hasRole('DOCTOR')")
     public ResponseEntity<ApiResponse<String>> removeExperience(
@@ -122,4 +150,3 @@ public class DoctorController {
         return ResponseEntity.ok(doctorService.deleteDoctorById(doctorId));
     }
 }
-

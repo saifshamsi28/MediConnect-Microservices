@@ -13,34 +13,39 @@ import java.util.UUID;
 
 public interface DoctorService {
 
-    ApiResponse<DoctorResponse> createDoctor(DoctorRequest request);
+        ApiResponse<DoctorResponse> createDoctor(DoctorRequest request);
 
-    ApiResponse<List<DoctorResponse>> createDoctorsBulk(List<DoctorRequest> requests);
+        ApiResponse<List<DoctorResponse>> createDoctorsBulk(List<DoctorRequest> requests);
 
-    ApiResponse<List<DoctorResponse>> getDoctorsByFilters(
-            Boolean active,
-            String name,
-            int page,
-            int size,
-            String sortBy,
-            String order
-    );
+        ApiResponse<List<DoctorResponse>> getDoctorsByFilters(
+                        Boolean active,
+                        String name,
+                        int page,
+                        int size,
+                        String sortBy,
+                        String order);
 
-    ApiResponse<DoctorResponse> getDoctorById(UUID doctorId);
-    
-    ApiResponse<DoctorResponse> getDoctorByUserId(UUID userId);
-    
-    ApiResponse<DoctorResponse> updateDoctor(UUID doctorId, DoctorRequest request, UUID authenticatedUserId);
-    
-    ApiResponse<EducationResponse> addEducation(UUID doctorId, EducationRequest request, UUID authenticatedUserId);
-    
-    ApiResponse<ExperienceResponse> addExperience(UUID doctorId, ExperienceRequest request, UUID authenticatedUserId);
-    
-    ApiResponse<String> removeEducation(UUID doctorId, Long educationId, UUID authenticatedUserId);
-    
-    ApiResponse<String> removeExperience(UUID doctorId, Long experienceId, UUID authenticatedUserId);
+        ApiResponse<DoctorResponse> getDoctorById(UUID doctorId);
 
-    ApiResponse<String> deleteDoctorById(UUID doctorId);
+        ApiResponse<DoctorResponse> getDoctorByUserId(UUID userId);
+
+        ApiResponse<DoctorResponse> updateDoctor(UUID doctorId, DoctorRequest request, UUID authenticatedUserId);
+
+        ApiResponse<EducationResponse> addEducation(UUID doctorId, EducationRequest request, UUID authenticatedUserId);
+
+        ApiResponse<ExperienceResponse> addExperience(UUID doctorId, ExperienceRequest request,
+                        UUID authenticatedUserId);
+
+        ApiResponse<EducationResponse> updateEducation(UUID doctorId, Long educationId, EducationRequest request,
+                        UUID authenticatedUserId);
+
+        ApiResponse<ExperienceResponse> updateExperience(UUID doctorId, Long experienceId, ExperienceRequest request,
+                        UUID authenticatedUserId);
+
+        ApiResponse<String> removeEducation(UUID doctorId, Long educationId, UUID authenticatedUserId);
+
+        ApiResponse<String> removeExperience(UUID doctorId, Long experienceId, UUID authenticatedUserId);
+
+        ApiResponse<String> deleteDoctorById(UUID doctorId);
 
 }
-
