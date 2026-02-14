@@ -1,6 +1,7 @@
 package com.mediconnect.appointmentservice.service;
 
 import com.mediconnect.appointmentservice.DTO.requestDTO.AppointmentRequest;
+import com.mediconnect.appointmentservice.DTO.requestDTO.RescheduleRequest;
 import com.mediconnect.appointmentservice.DTO.responseDTO.AppointmentResponse;
 import com.mediconnect.appointmentservice.DTO.responseDTO.SlotResponse;
 
@@ -18,4 +19,6 @@ public interface AppointmentService {
     List<AppointmentResponse> getAppointmentsByDoctor(UUID doctorId);
 
     AppointmentResponse cancelByAppointmentId(UUID id);
+
+    AppointmentResponse rescheduleAppointment(UUID appointmentId, RescheduleRequest request);
 }

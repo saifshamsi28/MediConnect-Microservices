@@ -3,6 +3,8 @@ package com.mediconnect.appointmentservice.client;
 
 import com.mediconnect.appointmentservice.DTO.responseDTO.AvailabilityResponse;
 import com.mediconnect.appointmentservice.DTO.responseDTO.DoctorResponse;
+import com.mediconnect.appointmentservice.DTO.responseDTO.LeaveResponse;
+import com.mediconnect.appointmentservice.DTO.responseDTO.ScheduleResponse;
 
 import com.mediconnect.appointmentservice.util.ApiResponse;
 import org.springframework.cloud.openfeign.FeignClient;
@@ -20,4 +22,10 @@ public interface DoctorClient {
 
     @GetMapping("/api/v1/doctors/availability/{doctorId}")
     ApiResponse<List<AvailabilityResponse>> getAvailability(@PathVariable("doctorId") UUID doctorId);
+
+    @GetMapping("/api/v1/doctors/leaves/{doctorId}")
+    ApiResponse<List<LeaveResponse>> getLeaves(@PathVariable("doctorId") UUID doctorId);
+
+    @GetMapping("/api/v1/doctors/schedules/{doctorId}")
+    ApiResponse<List<ScheduleResponse>> getSchedules(@PathVariable("doctorId") UUID doctorId);
 }

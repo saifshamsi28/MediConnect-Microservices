@@ -1,17 +1,20 @@
 package com.mediconnect.appointmentservice.controller;
 
 import com.mediconnect.appointmentservice.DTO.requestDTO.AppointmentRequest;
+import com.mediconnect.appointmentservice.DTO.requestDTO.RescheduleRequest;
 import com.mediconnect.appointmentservice.DTO.responseDTO.AppointmentResponse;
 import com.mediconnect.appointmentservice.DTO.responseDTO.SlotResponse;
 import com.mediconnect.appointmentservice.service.AppointmentService;
 import com.mediconnect.appointmentservice.util.ApiResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.UUID;
 
+@Slf4j
 @RestController
 @RequestMapping("/appointments")
 @RequiredArgsConstructor
@@ -37,15 +40,16 @@ public class AppointmentController {
         public ResponseEntity<ApiResponse<List<SlotResponse>>> getAvailableSlots(
                         @PathVariable("doctorId") UUID doctorId,
                         @RequestParam("date") String date) {
+
                 List<SlotResponse> slots = appointmentService.getAvailableSlots(doctorId, date);
                 ApiResponse<List<SlotResponse>> response = ApiResponse.<List<SlotResponse>>builder()
-                                .success(true)
-                                .message("Available slots fetched successfully")
-                                .data(slots)
-                                .build();
-
+                        .success(true)
+                        .message("Available slots fetched successfully")
+                        .data(slots)
+                        .build();
                 return ResponseEntity.ok(response);
         }
+
 
         @GetMapping("/patient/{patientId}")
         public ResponseEntity<ApiResponse<List<AppointmentResponse>>> getPatientAppointments(
@@ -81,6 +85,21 @@ public class AppointmentController {
                         .success(true)
                         .message("Appointment cancelled successfully")
                         .data(appointmentService.cancelByAppointmentId(appointmentId))
+                        .build());
+        }
+
+
+        @PatchMapping("/reschedule/{appointmentId}")
+        public ResponseEntity<ApiResponse<AppointmentResponse>> rescheduleAppointment(
+                @PathVariable UUID appointmentId,
+                @RequestBody RescheduleRequest request) {
+
+                AppointmentResponse updated = appointmentService.rescheduleAppointment(appointmentId, request);
+
+                return ResponseEntity.ok(ApiResponse.<AppointmentResponse>builder()
+                        .success(true)
+                        .message("Appointment rescheduled successfully")
+                        .data(updated)
                         .build());
         }
 
