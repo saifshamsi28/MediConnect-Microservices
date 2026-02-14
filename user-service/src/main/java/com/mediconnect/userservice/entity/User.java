@@ -41,6 +41,10 @@ public class User {
     @Builder.Default
     private Boolean enabled=true;
 
+    @Builder.Default
+    @Column(name = "profile_completed", nullable = false)
+    private Boolean profileCompleted = false;
+
     @Column(nullable = false,updatable = false)
     @CreationTimestamp
     private LocalDateTime createdAt;

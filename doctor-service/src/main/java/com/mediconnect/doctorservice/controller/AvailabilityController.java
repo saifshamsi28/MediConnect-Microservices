@@ -5,6 +5,7 @@ import com.mediconnect.doctorservice.dto.responseDtos.ApiResponse;
 import com.mediconnect.doctorservice.dto.responseDtos.AvailabilityResponse;
 import com.mediconnect.doctorservice.service.AvailabilityService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,20 +13,18 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/api/doctors/availability")
+@RequestMapping("/doctors/availability")
 @RequiredArgsConstructor
 public class AvailabilityController {
 
     private final AvailabilityService availabilityService;
 
     @PostMapping
-    public ResponseEntity<AvailabilityResponse> addAvailability(
+    public ResponseEntity<ApiResponse<AvailabilityResponse>> addAvailability(
             @RequestBody AvailabilityRequest request) {
 
-        AvailabilityResponse response =
-                availabilityService.addAvailability(request);
-
-        return ResponseEntity.ok(response);
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(availabilityService.addAvailability(request));
     }
 
     @GetMapping("/{doctorId}")

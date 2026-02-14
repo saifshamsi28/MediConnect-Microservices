@@ -11,6 +11,8 @@ import java.util.UUID;
 public interface DoctorRepository extends JpaRepository<Doctor, UUID> {
 
     Optional<Doctor> findByEmail(String email);
+    
+    Optional<Doctor> findByUserId(UUID userId);
 
     boolean existsByEmail(String email);
 
@@ -19,6 +21,15 @@ public interface DoctorRepository extends JpaRepository<Doctor, UUID> {
     List<Doctor> findByActiveTrue();
 
     Page<Doctor> findByActive(boolean active, Pageable pageable);
+
+    Page<Doctor> findByFirstNameContainingIgnoreCaseOrLastNameContainingIgnoreCase(
+            String firstName, String lastName, Pageable pageable
+    );
+
+    Page<Doctor> findByActiveAndFirstNameContainingIgnoreCaseOrActiveAndLastNameContainingIgnoreCase(
+            boolean active1, String firstName, boolean active2, String lastName, Pageable pageable
+    );
 }
+
 
 

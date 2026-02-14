@@ -15,9 +15,9 @@ import java.util.UUID;
 @FeignClient(name = "doctor-service")
 public interface DoctorClient {
 
-    @GetMapping("/api/doctors/{doctorId}")
-    ApiResponse<DoctorResponse> getDoctorById(@PathVariable UUID doctorId);
+    @GetMapping("/api/v1/doctors/{doctorId}")
+    ApiResponse<DoctorResponse> getDoctorById(@PathVariable("doctorId") UUID doctorId);
 
-    @GetMapping("/api/doctors/availability/{doctorId}")
-    ApiResponse<List<AvailabilityResponse>> getAvailability(@PathVariable UUID doctorId);
+    @GetMapping("/api/v1/doctors/availability/{doctorId}")
+    ApiResponse<List<AvailabilityResponse>> getAvailability(@PathVariable("doctorId") UUID doctorId);
 }
