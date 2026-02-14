@@ -1,11 +1,17 @@
 package com.mediconnect.doctorservice.entity;
 
 import jakarta.persistence.*;
+import lombok.*;
 
 import java.time.LocalDate;
 
 @Entity
 @Table(name = "doctor_leave")
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class DoctorLeave {
 
     @Id
